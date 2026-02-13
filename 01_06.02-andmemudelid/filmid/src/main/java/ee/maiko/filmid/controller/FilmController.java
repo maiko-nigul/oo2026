@@ -14,18 +14,18 @@ public class FilmController {
     private FilmRepository filmRepository;
 
     @GetMapping("films")
-    public List<Film> getFilm(){
+    public List<Film> getFilm() {
         return filmRepository.findAll();
     }
 
     @DeleteMapping("films/{id}")
-    public List<Film> deleteFilm(@PathVariable Long id){
+    public List<Film> deleteFilm(@PathVariable Long id) {
         filmRepository.deleteById(id);
         return filmRepository.findAll();
     }
 
     @PostMapping("films")
-    public List<Film> postFilm(@RequestBody Film film){
+    public List<Film> postFilm(@RequestBody Film film) {
         filmRepository.save(film);
         return filmRepository.findAll();
     }
