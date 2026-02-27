@@ -6,25 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Order {
+public class OrderRow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date created;
-    private double total;
-    private String parcelMachine;
 
-    @ManyToOne
-    private Person person;
+    @ManyToOne // see product v6ib olla ka teistes orderRows
+    private Product product;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<OrderRow> orderRows;
+    private int quantity;
 }

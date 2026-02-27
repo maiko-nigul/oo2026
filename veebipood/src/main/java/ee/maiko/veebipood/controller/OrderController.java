@@ -1,17 +1,23 @@
 package ee.maiko.veebipood.controller;
 
+import ee.maiko.veebipood.dto.OrderRowDto;
 import ee.maiko.veebipood.entitiy.Order;
+import ee.maiko.veebipood.entitiy.OrderRow;
 import ee.maiko.veebipood.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import ee.maiko.veebipood.service.OrderService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 public class OrderController {
 
-    @Autowired
     private OrderRepository orderRepository;
+    private OrderService orderService;
+
 
     //localhost:8080/products
     @GetMapping("orders")
@@ -24,9 +30,13 @@ public class OrderController {
         orderRepository.deleteById(id); // kustutan
         return orderRepository.findAll(); // uuenenud seis
     }
+    //person --> autentimise tokenist. parcelMachine --> Omnivast
+    // localhosat:8080/orders/personId=1&parcelMachine=TammsaarePargiPakiautomaat
     @PostMapping("orders")
-    public List<Order> addOrder(@RequestBody Order order){
-        orderRepository.save(order); // siia salvestab
-        return orderRepository.findAll(); // siia uuenenud seis
+    public Order addOrder(@RequestParam Long personId,
+                                @RequestParam(required = false) String parcelMachine,
+                                @RequestBody List<OrderRowDto> orderRows){
+        return orderService.saveOrder(personId, parcelMachine, orderRows); // siia salvestab
+//        return orderRepository.findAll(); // siia uuenenud seis
     }
 }
