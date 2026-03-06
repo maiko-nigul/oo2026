@@ -44,7 +44,7 @@ public class FilmController {
     }
     @GetMapping("films/available")
     public List<Film> findAllAvaialbe(){
-//        List<Film> films = findAll();
+        List<Film> films = findAll();
 //        List<Film> availableFilms = new ArrayList<>();
 //        for(Film film : films){
 //            if (film.getDays() == 0) {
