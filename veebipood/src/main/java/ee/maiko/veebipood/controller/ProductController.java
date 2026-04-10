@@ -4,10 +4,15 @@ import ee.maiko.veebipood.entitiy.Product;
 import ee.maiko.veebipood.repository.ProductRepository;
 import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*") // Turvaviga, p2ris arendustes seda ei teeks
+// @CrossOriging(origins = "https://localhost5137
+// @CrossOrigin(origins = "https://www.arvutitark.ee")
 @RestController
 public class ProductController {
 
@@ -15,9 +20,14 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    //localhost:8080/products
+    //localhost:8080/products?page=0&size=4&sort=price,asc
     @GetMapping("products")
-    public List<Product> getProducts(){
+    public Page<Product> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    @GetMapping("products/admin")
+    public List<Product> getAdminProducts(){
         return productRepository.findAll();
     }
 
