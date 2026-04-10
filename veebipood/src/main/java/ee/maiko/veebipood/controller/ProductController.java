@@ -20,10 +20,15 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    //localhost:8080/products?page=0&size=4&sort=price,asc
+    //localhost:8080/products?page=0&size=4&sort=price,asc --> Pageable
+    // ?activeCategoryId=0 --> @RequestParam Long activeCategoryId
     @GetMapping("products")
-    public Page<Product> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<Product> getProducts(Pageable pageable, @RequestParam(required = false) Long activeCategoryId) {
+        if (activeCategoryId == null || activeCategoryId == 0) {
+            return productRepository.findAll(pageable);
+        }else{
+            return productRepository.findAllByCategoryId(pageable, activeCategoryId);
+        }
     }
 
     @GetMapping("products/admin")
