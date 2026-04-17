@@ -18,5 +18,6 @@ public class Result {
 
     @ManyToOne
     @JoinColumn(name = "athlete_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Athlete athlete;
 }
