@@ -1,5 +1,6 @@
 package ee.maiko.decathlon.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +14,10 @@ public class Result {
     private Long id;
 
     private String discipline;
-    private Double value;
     private Integer points;
 
     @ManyToOne
     @JoinColumn(name = "athlete_id")
-    @com.fasterxml.jackson.annotation.JsonIgnore
+    @JsonIgnore
     private Athlete athlete;
 }

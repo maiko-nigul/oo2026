@@ -15,6 +15,9 @@ public class Athlete {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String country;
+
+    private Integer totalPoints = 0;
 
     @OneToMany(mappedBy = "athlete", cascade = CascadeType.ALL)
     private Set<Result> results = new HashSet<>();

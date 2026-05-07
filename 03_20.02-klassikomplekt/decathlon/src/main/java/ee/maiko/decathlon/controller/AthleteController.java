@@ -22,16 +22,26 @@ public class AthleteController {
 
     private final AthleteRepository athleteRepository;
     private final ResultRepository resultRepository;
-    private final ScoringService scoringService;
 
 
     @GetMapping("athletes")
-    public List<Athlete> getAthlete() {
-        return athleteRepository.findAll();
+    public Page<Athlete> getAthletes(
+            @RequestParam(required = false) String country, // Filtreerimine riigi (String) järgi
+            Pageable pageable) { // Sisaldab page, size ja sort parameetreid
+
+        if (country != null && !country.isEmpty()) {
+            return athleteRepository.findByCountry(country, pageable);
+        }
+        return athleteRepository.findAll(pageable);
+    }
+    @DeleteMapping("athletes/{id}")
+    public void  deleteAthlete(@PathVariable Long id) {
+        athleteRepository.deleteById(id);
     }
 
     @PostMapping("athletes")
     public Athlete createAthlete(@RequestBody Athlete athlete) {
+        athlete.setId(null);
         return athleteRepository.save(athlete);
     }
 
@@ -39,22 +49,16 @@ public class AthleteController {
     public Result addResult(@PathVariable Long id, @RequestBody Result result) {
         Athlete athlete = athleteRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sportlast ei leitud"));
-
-        int points = scoringService.calculatePoints(result.getDiscipline(), result.getValue());
-        result.setPoints(points);
-
         result.setAthlete(athlete);
 
-        return resultRepository.save(result);
+        if (result.getPoints() != null) {
+            athlete.setTotalPoints(athlete.getTotalPoints() + result.getPoints());
+        }
+
+        athleteRepository.save(athlete);
+
+        return result;
     }
     
-    @GetMapping("athletes/{id}/total")
-    public Integer getTotalPoints(@PathVariable Long id) {
-        Athlete athlete = athleteRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sportlast ei leitud"));
 
-        return athlete.getResults().stream()
-                .mapToInt(Result::getPoints)
-                .sum();
-    }
 }
